@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NE FakeNews - Detect Fake News</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+    .sidebar {
+      background: linear-gradient(to bottom, #1f2937, #111827);
+    }
+  </style>
+</head>
+<body class="bg-zinc-950 text-white min-h-screen flex">
+  <!-- Sidebar -->
+  <div class="w-64 sidebar flex flex-col border-r border-zinc-800">
+    <div class="p-6 flex items-center gap-3 border-b border-zinc-800">
+      <div class="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center text-xl font-bold">🛡️</div>
+      <div>
+        <h1 class="text-2xl font-semibold tracking-tight">NE FakeNews</h1>
+      </div>
+    </div>
+
+    <div class="flex-1 py-6 px-4 space-y-1">
+      <a href="#" class="flex items-center gap-3 px-5 py-4 bg-blue-600/10 text-blue-400 rounded-2xl font-medium">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <span>Detect</span>
+      </a>
+      <a href="#" class="flex items-center gap-3 px-5 py-4 hover:bg-zinc-900 rounded-2xl text-zinc-400 hover:text-white transition-colors">
+        <i class="fa-solid fa-chart-simple"></i>
+        <span>Dashboard</span>
+      </a>
+      <a href="#" class="flex items-center gap-3 px-5 py-4 hover:bg-zinc-900 rounded-2xl text-zinc-400 hover:text-white transition-colors">
+        <i class="fa-solid fa-clock-rotate-left"></i>
+        <span>History</span>
+      </a>
+    </div>
+
+    <div class="mt-auto p-4 border-t border-zinc-800">
+      <div class="flex items-center gap-3 px-4 py-3 hover:bg-zinc-900 rounded-2xl cursor-pointer">
+        <div class="w-8 h-8 bg-zinc-700 rounded-full flex items-center justify-center text-sm font-medium">A</div>
+        <div class="flex-1">
+          <p class="text-sm font-medium">Augustine</p>
+        </div>
+        <i class="fa-solid fa-arrow-right-from-bracket text-zinc-400"></i>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="flex-1 p-8">
+    <div class="max-w-2xl mx-auto">
+      <div class="flex items-center justify-between mb-8">
+        <h2 class="text-3xl font-semibold">Detect Fake News</h2>
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-sm font-bold">A</div>
+          <span class="text-sm">Augustine</span>
+        </div>
+      </div>
+
+      <!-- Language Selector -->
+      <div class="bg-zinc-900 rounded-3xl p-8 border border-zinc-800">
+        <h3 class="text-lg font-medium mb-4">Select language</h3>
+        <div class="flex flex-wrap gap-3 mb-8">
+          <button onclick="selectLang(this)" class="lang-btn px-6 py-2.5 bg-blue-600 text-white rounded-2xl font-medium">English</button>
+          <button onclick="selectLang(this)" class="lang-btn px-6 py-2.5 bg-zinc-800 hover:bg-zinc-700 rounded-2xl text-zinc-300">Assamese</button>
+          <button onclick="selectLang(this)" class="lang-btn px-6 py-2.5 bg-zinc-800 hover:bg-zinc-700 rounded-2xl text-zinc-300">Meitei</button>
+          <button onclick="selectLang(this)" class="lang-btn px-6 py-2.5 bg-zinc-800 hover:bg-zinc-700 rounded-2xl text-zinc-300">Mizo</button>
+          <button onclick="selectLang(this)" class="lang-btn px-6 py-2.5 bg-zinc-800 hover:bg-zinc-700 rounded-2xl text-zinc-300">Bodo</button>
+        </div>
+
+        <!-- Text Input -->
+        <textarea id="newsText" rows="4"
+          class="w-full bg-zinc-950 border border-zinc-700 rounded-2xl p-6 text-lg resize-none focus:outline-none focus:border-blue-500"
+          placeholder="Paste news here...">Trump claims election was stolen with no evidence provided to courts</textarea>
+
+        <div class="flex gap-4 mt-6">
+          <button onclick="detectFakeNews()" 
+            class="flex-1 flex items-center justify-center gap-3 bg-blue-600 hover:bg-blue-500 py-4 rounded-2xl font-semibold transition-all">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            Detect
+          </button>
+          <button onclick="clearText()" 
+            class="flex-1 border border-zinc-700 hover:bg-zinc-900 py-4 rounded-2xl font-semibold transition-all">
+            Clear
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+<script>
+function selectLang(el) {
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.classList.remove('bg-blue-600', 'text-white');
+    btn.classList.add('bg-zinc-800', 'text-zinc-300');
+  });
+  el.classList.add('bg-blue-600', 'text-white');
+  el.classList.remove('bg-zinc-800', 'text-zinc-300');
+}
+
+function detectFakeNews() {
+  const text = document.getElementById('newsText').value.trim();
+  if (!text) {
+    alert("Please enter some text to analyze");
+    return;
+  }
+  
+  alert("🔍 Analyzing...\n\nThis is a demo. In a real app this would call an AI model.");
+  // You can expand this with actual fake news detection logic
+}
+
+function clearText() {
+  document.getElementById('newsText').value = '';
+}
+</script>
+</html>
