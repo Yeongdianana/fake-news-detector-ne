@@ -1,83 +1,62 @@
 import React from 'react';
 
-const card = {background:'white',borderRadius:'12px',border:'1px solid #EBEBEB',padding:'20px'};
-
 export default function Dashboard() {
-  const history = JSON.parse(localStorage.getItem('history') || '[]');
-  const fake = history.filter(h=>h.label==='FAKE').length;
-  const real = history.filter(h=>h.label==='REAL').length;
+  const history = JSON.parse(localStorage.getItem('fakeNewsHistory') || '[]');
+  const fake = history.filter(h => h.label === 'FAKE').length;
+  const real = history.filter(h => h.label === 'REAL').length;
 
-  const metrics = [
-    {label:'Total Checked', value: history.length, color:'#185FA5', bg:'#EBF3FB'},
-    {label:'Fake Detected',  value: fake,           color:'#A32D2D', bg:'#FFF5F5'},
-    {label:'Real Verified',  value: real,           color:'#226622', bg:'#F0FAF0'},
-    {label:'Model Accuracy', value: '99.87%',       color:'#0F6E56', bg:'#E1F5EE'},
-  ];
-
-  const langs = {};
-  history.forEach(h => langs[h.lang] = (langs[h.lang]||0)+1);
+  const langCount = {};
+  history.forEach(h => langCount[h.lang] = (langCount[h.lang]||0)+1);
 
   return (
-    <div style={{maxWidth:'680px'}}>
+    <div style={{padding:'24px',maxWidth:'700px'}}>
+
+      {/* Metrics */}
       <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:'12px',marginBottom:'20px'}}>
-        {metrics.map((m,i) => (
-          <div key={i} style={{...card,padding:'16px'}}>
-            <div style={{width:'36px',height:'36px',borderRadius:'8px',background:m.bg,display:'flex',alignItems:'center',justifyContent:'center',marginBottom:'10px',fontSize:'16px'}}>
-              {['📊','🔴','🟢','🎯'][i]}
-            </div>
-            <div style={{fontSize:'22px',fontWeight:'600',color:m.color}}>{m.value}</div>
-            <div style={{fontSize:'12px',color:'#888',marginTop:'2px'}}>{m.label}</div>
+        {[
+          {label:'Total Checked', value:history.length, icon:'📊', color:'#2563eb', bg:'#eff6ff'},
+          {label:'Fake Detected',  value:fake,           icon:'🔴', color:'#dc2626', bg:'#fef2f2'},
+          {label:'Real Verified',  value:real,           icon:'🟢', color:'#16a34a', bg:'#f0fdf4'},
+          {label:'Accuracy',       value:'99.87%',       icon:'🎯', color:'#0f766e', bg:'#f0fdfa'},
+        ].map((m,i) => (
+          <div key={i} style={{background:'white',borderRadius:'12px',border:'1px solid #e5e7eb',padding:'16px'}}>
+            <div style={{fontSize:'24px',marginBottom:'8px'}}>{m.icon}</div>
+            <div style={{fontSize:'22px',fontWeight:'700',color:m.color}}>{m.value}</div>
+            <div style={{fontSize:'12px',color:'#6b7280',marginTop:'2px'}}>{m.label}</div>
           </div>
         ))}
       </div>
 
-      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'16px',marginBottom:'20px'}}>
-        <div style={card}>
-          <div style={{fontSize:'13px',fontWeight:'600',marginBottom:'16px',color:'#1A1A1A'}}>By language</div>
-          {Object.keys(langs).length === 0 ? (
-            <p style={{fontSize:'13px',color:'#aaa'}}>No data yet</p>
-          ) : Object.entries(langs).map(([l,c],i) => (
-            <div key={i} style={{display:'flex',alignItems:'center',gap:'8px',marginBottom:'10px'}}>
-              <span style={{width:'70px',fontSize:'12px',color:'#888'}}>{l}</span>
-              <div style={{flex:1,height:'8px',background:'#F0F0F0',borderRadius:'4px'}}>
-                <div style={{height:'100%',width:`${(c/history.length)*100}%`,background:'#185FA5',borderRadius:'4px'}}/>
-              </div>
-              <span style={{fontSize:'12px',fontWeight:'500',color:'#1A1A1A',minWidth:'20px'}}>{c}</span>
+      {/* Language Stats */}
+      <div style={{background:'white',borderRadius:'12px',border:'1px solid #e5e7eb',padding:'20px',marginBottom:'16px'}}>
+        <p style={{fontWeight:'600',fontSize:'14px',marginBottom:'16px',color:'#111827'}}>Checks by language</p>
+        {Object.keys(langCount).length === 0 ? (
+          <p style={{color:'#9ca3af',fontSize:'13px',textAlign:'center',padding:'16px'}}>No data yet. Start detecting news!</p>
+        ) : Object.entries(langCount).map(([l,c],i) => (
+          <div key={i} style={{display:'flex',alignItems:'center',gap:'12px',marginBottom:'10px'}}>
+            <span style={{width:'80px',fontSize:'13px',color:'#6b7280'}}>{l}</span>
+            <div style={{flex:1,height:'8px',background:'#f3f4f6',borderRadius:'4px'}}>
+              <div style={{height:'100%',width:`${(c/history.length)*100}%`,background:'#3b82f6',borderRadius:'4px'}}/>
             </div>
-          ))}
-        </div>
-
-        <div style={card}>
-          <div style={{fontSize:'13px',fontWeight:'600',marginBottom:'16px',color:'#1A1A1A'}}>Fake vs Real</div>
-          <div style={{display:'flex',justifyContent:'center',gap:'24px',alignItems:'center',height:'80px'}}>
-            <div style={{textAlign:'center'}}>
-              <div style={{fontSize:'28px',fontWeight:'700',color:'#E24B4A'}}>{fake}</div>
-              <div style={{fontSize:'11px',color:'#888',marginTop:'2px'}}>Fake</div>
-            </div>
-            <div style={{width:'1px',height:'40px',background:'#EBEBEB'}}/>
-            <div style={{textAlign:'center'}}>
-              <div style={{fontSize:'28px',fontWeight:'700',color:'#4CAF50'}}>{real}</div>
-              <div style={{fontSize:'11px',color:'#888',marginTop:'2px'}}>Real</div>
-            </div>
+            <span style={{fontSize:'13px',fontWeight:'600',color:'#111827',minWidth:'24px'}}>{c}</span>
           </div>
-          <div style={{height:'6px',background:'#F0F0F0',borderRadius:'3px',overflow:'hidden',marginTop:'8px'}}>
-            {history.length > 0 && <div style={{height:'100%',width:`${(fake/history.length)*100}%`,background:'#E24B4A',borderRadius:'3px'}}/>}
-          </div>
-        </div>
+        ))}
       </div>
 
-      <div style={card}>
-        <div style={{fontSize:'13px',fontWeight:'600',marginBottom:'12px',color:'#1A1A1A'}}>Recent checks</div>
+      {/* Recent */}
+      <div style={{background:'white',borderRadius:'12px',border:'1px solid #e5e7eb',padding:'20px'}}>
+        <p style={{fontWeight:'600',fontSize:'14px',marginBottom:'12px',color:'#111827'}}>Recent checks</p>
         {history.length === 0 ? (
-          <p style={{fontSize:'13px',color:'#aaa',textAlign:'center',padding:'20px 0'}}>No checks yet. Go to Detect to start!</p>
+          <p style={{color:'#9ca3af',fontSize:'13px',textAlign:'center',padding:'16px'}}>No history yet!</p>
         ) : history.slice(0,5).map((h,i) => (
-          <div key={i} style={{display:'flex',alignItems:'center',gap:'12px',padding:'8px 0',borderBottom: i<4?'1px solid #F5F5F5':'none'}}>
-            <span style={{padding:'3px 10px',borderRadius:'20px',fontSize:'11px',fontWeight:'600',whiteSpace:'nowrap',
-              background: h.label==='FAKE'?'#FFF5F5':'#F0FAF0',color: h.label==='FAKE'?'#CC0000':'#226622'}}>
-              {h.label}
-            </span>
-            <span style={{flex:1,fontSize:'13px',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap',color:'#333'}}>{h.text}</span>
-            <span style={{fontSize:'11px',color:'#aaa',whiteSpace:'nowrap'}}>{h.conf}%</span>
+          <div key={i} style={{display:'flex',alignItems:'center',gap:'12px',padding:'8px 0',borderBottom:i<4?'1px solid #f9fafb':'none'}}>
+            <span style={{
+              padding:'3px 10px',borderRadius:'20px',fontSize:'11px',fontWeight:'600',
+              background: h.label==='FAKE'?'#fef2f2':'#f0fdf4',
+              color:       h.label==='FAKE'?'#dc2626':'#16a34a'
+            }}>{h.label}</span>
+            <span style={{flex:1,fontSize:'13px',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap',color:'#374151'}}>{h.text}</span>
+            <span style={{fontSize:'12px',color:'#9ca3af'}}>{h.conf}%</span>
           </div>
         ))}
       </div>
